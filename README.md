@@ -6,7 +6,7 @@ This repository contains scripts for analyzing the UrBAN dataset. This multimoda
 
 There are two notebooks in this repository. 
 
-1. [main.ipynb](code/main.ipynb)
+1. [main_benchmarks.ipynb](code/main_benchmarks.ipynb)
 2. [data_description_plots_2021_2022.ipynb](code/data_description_plots_2021_2022.ipynb)
 
 
