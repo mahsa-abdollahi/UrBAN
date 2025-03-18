@@ -1,8 +1,6 @@
 import numpy as np
 from scipy.stats import pearsonr
 from sklearn.preprocessing import MinMaxScaler
-
-
 import depmeas #use from github
 import feature_select # use from github
 from feature_select import feature_select_optimized
@@ -215,9 +213,7 @@ def score_mape_box(y_true, y_pred):
         
     mape_box = mean_absolute_percentage_error(np.array(y_true).flatten(), np.array(temp).flatten())
     
-    return mape_box 
-
-
+    return mape_box
 
 
 def evaluate_model_performance(y_tests, random_predictions, model_predictions, clipped=True):
@@ -232,23 +228,7 @@ def evaluate_model_performance(y_tests, random_predictions, model_predictions, c
     Returns:
     - Dictionary containing t-statistics, p-values, and mean ± std for MAE, RMSE, and correlation.
     """
-    """
-    # Calculate metrics for the random baseline
-    random_maes = [score_mae_box(y_test, random_pred) for y_test, random_pred in zip(y_tests, random_predictions)]
-    random_rmses = [score_rmse_box(y_test, random_pred) for y_test, random_pred in zip(y_tests, random_predictions)]
-    random_corrs = [score_corr_box(y_test, random_pred) for y_test, random_pred in zip(y_tests, random_predictions)]
-    random_r2 = [score_r2_box(y_test, random_pred) for y_test, random_pred in zip(y_tests, random_predictions)]
-    random_mape = [score_mape_box(y_test, random_pred) for y_test, random_pred in zip(y_tests, random_predictions)]
-
-    # Calculate metrics for the model
-    model_maes = [score_mae_box(y_test, model_pred) for y_test, model_pred in zip(y_tests, model_predictions)]
-    model_rmses = [score_rmse_box(y_test, model_pred) for y_test, model_pred in zip(y_tests, model_predictions)]
-    model_corrs = [score_corr_box(y_test, model_pred) for y_test, model_pred in zip(y_tests, model_predictions)]
-    model_r2 = [score_r2_box(y_test, model_pred) for y_test, model_pred in zip(y_tests, model_predictions)]
-    model_mape = [score_mape_box(y_test, model_pred) for y_test, model_pred in zip(y_tests, model_predictions)]
-
-
-    """
+   
     if clipped:
     # Clip predictions based on boxes
         random_predictions = [
@@ -360,7 +340,6 @@ def ml_gridsearchcv_kfold(model, cv, refit=False):
         grid = GridSearchCV(SVR(), param_grid, refit=refit, verbose=0, scoring=score,
                                 cv=cv)
         
-        
     elif model == 'lasso':
         param_grid = {'alpha': np.logspace(-4, -0.5, 30)} 
         
@@ -378,7 +357,6 @@ def ml_gridsearchcv_kfold(model, cv, refit=False):
                                 cv=cv)
         
     elif model == 'random forest':
-        
         
         param_grid = {'n_estimators': np.arange(100, 200, 50),
                'max_features': ['auto', 'sqrt'],
@@ -423,9 +401,6 @@ def ml_gridsearchcv_kfold(model, cv, refit=False):
                             scoring=score, cv=cv)
         
     return grid
-
-
-
 
 
 def random_split_cv(feature_data, selected_columns=[], n_splits=5, model='random forest'):
@@ -593,10 +568,6 @@ def hive_independent_cv(feature_data, selected_columns=[], model='random forest'
     
     x_data = feature_data.loc[:, selected_columns].values
     y_data = feature_data.iloc[:, 1].values
-    
-    
-
-
 
     for train_val_idx, test_idx in outer_cv.split(x_data, y_data, groups):
         # Split into training-validation and test sets
@@ -651,8 +622,7 @@ def hive_independent_cv(feature_data, selected_columns=[], model='random forest'
         for hive_id in test_hive_ids:
             hive_indices = np.where(groups[test_idx] == hive_id)
             hive_results[hive_id] = (y_test[hive_indices], predictions[hive_indices])
-            
-            
+
 
         clipped_pred = clip_based_on_boxes(y_test, predictions)
         
@@ -710,8 +680,6 @@ def hive_independent_cv(feature_data, selected_columns=[], model='random forest'
     print(f'Correlation: {results_clipped["test_corr"]["mean"]:.4f} ± {results_clipped["test_corr"]["std"]:.4f}')
     print(f'R squared: {results_clipped["test_r2"]["mean"]:.4f} ± {results_clipped["test_r2"]["std"]:.4f}')
     print(f'MAPE: {results_clipped["test_mape"]["mean"]:.4f} ± {results_clipped["test_mape"]["std"]:.4f}')
-    
-    
 
     return model_predictions, y_tests, results, results_clipped, hive_results
 
@@ -723,10 +691,6 @@ def calc_all_metrics(y_true, y_pred):
     r2 = r2_score(y_true, y_pred)
     mape = mean_absolute_percentage_error(y_true, y_pred)
     return mae, rmse, corr, r2, mape
-    
-    
-    
-    
     
 def features_selection_cv(feature, feature_data, selected_columns, n_splits, method, split, model, preprocessing):    
     # Extract x_data and y_data
